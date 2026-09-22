@@ -1,0 +1,30 @@
+static const int N=200005;
+long long st1[4*N] = {0}, st2[4*N] = {0};
+
+void update(int node, int start, int end, int idx, long long val, long long *st){
+    if(start == end){
+        st[node] = val;
+        return;
+    }
+    int mid = (start + end) / 2;
+    if(start <= idx and idx <= mid){
+        update(2*node, start, mid, idx, val, st);
+    }
+    else{
+        update(2*node+1, mid+1, end, idx, val, st);
+    }
+    st[node] = st[2*node] + st[2*node+1];
+}
+
+long long query(int node, int start, int end, int l, int r, long long *st){
+    if(r < start or end < l){
+        return 0;
+    }
+    if(l <= start and end <= r){
+        return st[node];
+    }
+    long long mid = (start + end) / 2;
+    long long p1 = query(2*node, start, mid, l, r, st);
+    long long p2 = query(2*node+1, mid+1, end, l, r, st);
+    return (p1 + p2);
+}
